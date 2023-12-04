@@ -28,6 +28,12 @@ When you enter "scan on" you should wait until you see the MAC address and / or 
 
 #### rfcomm
 
+Update: There is an easier way to connect a device using rfcomm that doesn't require ctrl+c afterwards, and makes a little more sense:
+
+    sudo rfcomm bind 0 <MAC_ADDRESS>
+
+Where 0 is the comm port number (bonbon1 is typically 0, bonbon2 is typically 1).
+
 Use the following command to open a communications port with the now paired and trusted bluetooth device.
 
     sudo rfcomm connect /dev/rfcomm0 <MAC_ADDRESS> 1 &
