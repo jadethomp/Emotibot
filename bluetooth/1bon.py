@@ -1,9 +1,6 @@
 import serial
 ser = serial.Serial("/dev/rfcomm0")
 
-# Send character 'S' to start the program
-ser.write(bytearray('S','ascii'))
-
 # Read line
 while True:
 	# Temporary Command Line Interface for Testing
