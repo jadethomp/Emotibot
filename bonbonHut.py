@@ -12,6 +12,8 @@ import serial
 bonbon1 = serial.Serial("/dev/rfcomm0")
 bonbon2 = serial.Serial("/dev/rfcomm1")
 
+present = False
+
 GPIO_SIG = 6
 
 # Checks if the ultrasonic sensor detects an obstacle within range "low" to "high"
@@ -23,13 +25,16 @@ def checkRange(low, high):
 
     print("Distance : %.1f CM" % distanceCM)
 
-    if distanceCM > low and distanceCM < high:
+    if distanceCM > low and distanceCM < high and not present:
         print("Person within distance!")
         bonbon1.write(b'h')
         bonbon2.write(b'h')
-    else:
+        present = True
+    elif present:
+        print("Person out of distance!")
         bonbon1.write(b'n')
         bonbon2.write(b'n')
+        present = False
 
     # Reset GPIO settings
     GPIO.cleanup()
