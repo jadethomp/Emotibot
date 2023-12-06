@@ -4,6 +4,9 @@
 
 # Printing to the console could be removed but is left as a debug / control PC heartbeat signal
 
+import sys
+import os
+
 import RPi.GPIO as GPIO
 import time
 
@@ -14,10 +17,11 @@ bonbon2 = serial.Serial("/dev/rfcomm1")
 
 present = False
 
-GPIO_SIG = 6
+GPIO_SIG = 18
 
 # Checks if the ultrasonic sensor detects an obstacle within range "low" to "high"
 def checkRange(low, high):
+    global present
     print("SeeedStudio Grove Ultrasonic get data and print")
 
     # check distance
@@ -30,17 +34,16 @@ def checkRange(low, high):
         bonbon1.write(b'h')
         bonbon2.write(b'h')
         present = True
-    elif present:
+    elif distanceCM < low or distanceCM > high and present:
         print("Person out of distance!")
         bonbon1.write(b'n')
         bonbon2.write(b'n')
         present = False
 
-    # Reset GPIO settings
-    GPIO.cleanup()
-
-
 def measurementInCM():
+    # rpi board gpio or bcm gpio
+    GPIO.setmode(GPIO.BCM)
+
     # setup the GPIO_SIG as output
     GPIO.setup(GPIO_SIG, GPIO.OUT)
 
@@ -77,10 +80,16 @@ def calcDistance(start, stop):
 
     return distance
 
-
-if __name__ == '__main__':
-    # rpi board gpio or bcm gpio
-    GPIO.setmode(GPIO.BCM)
-
+def main():
     while True:
         checkRange(20, 100)
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        GPIO.cleanup()
+        try:
+            sys.exit(130)
+        except SystemExit:
+            os._exit(130)
