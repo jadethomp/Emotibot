@@ -61,3 +61,7 @@ Exit screen with:
     Enter
 
 #### Interfacing with the port: Python
+
+Dependency: pyserial
+
+pip3 install pyserial
