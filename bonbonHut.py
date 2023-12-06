@@ -89,6 +89,7 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         GPIO.cleanup()
+        print("Keyboard Interrupt! GPIO Cleaned Up\n")
         try:
             sys.exit(130)
         except SystemExit:
