@@ -9,3 +9,8 @@ Load SerialEmotionTest and SerialEmotionTestBonBon2 onto 2 different ESP32's. Co
 Run 1bon.py if there is only 1 bonbon. This bonbon should be connected via a serial port on /dev/rfcomm0.
 
 Run 2bon.py if there are 2 bonbons. One bonbon should be connected on serial port /dev/rfcomm0, and another on /dev/rfcomm1. See "bluetooth/bluetoothDoc.md" for more information.
+
+## Dependencies
+
+sudo apt-get install libsdl-ttf2.0-0
+sudo apt-get install libsdl2-mixer-2.0-0
