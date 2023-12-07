@@ -101,7 +101,7 @@ void brighten() {
   uint16_t i, j;
 
   for (j = 10; j < 255; j++) {
-    for (i = 0; i < strip.numPixels(); i+=3) {
+    for (i = 1; i < strip.numPixels(); i+=2) {
       drv.go();
       if(current_emotion == 0){ //anxious, red
         strip.setPixelColor(i, 0, j, 0, 1);
@@ -123,7 +123,7 @@ void darken() {
   uint16_t i, j;
 
   for (j = 255; j > 10; j--) {
-    for (i = 0; i < strip.numPixels(); i+=3) {
+    for (i = 1; i < strip.numPixels(); i+=2) {
       drv.go();
       if(current_emotion == 0){ //anxious, red
         strip.setPixelColor(i, 0, j, 0, 1);
