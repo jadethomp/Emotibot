@@ -82,7 +82,7 @@ def calcDistance(start, stop):
 
 def main():
     while True:
-        checkRange(20, 100)
+        checkRange(0, 100)
 
 if __name__ == '__main__':
     try:
