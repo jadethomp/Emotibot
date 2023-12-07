@@ -15,14 +15,14 @@
 //#define USE_PIN // Uncomment this to use PIN during pairing. The pin is specified on the line below
 const char *pin = "1234"; // Change this to more secure PIN.
 
-//#define USE_DRV // Uncomment this to use DRV for heartbeat feedback
-//#define DEPLOY // Uncomment this to deploy full feedback array
+#define USE_DRV // Uncomment this to use DRV for heartbeat feedback
+#define DEPLOY // Uncomment this to deploy full feedback array
 
 //Emotion Encoding Scheme ------------
 //0: Anxious
 //1: Sad
 //2: Happy
-int current_emotion = 0;
+int current_emotion = 1;
 //BPM Array
 int emotions[3] = {110, 50, 75};
 
