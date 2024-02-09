@@ -65,3 +65,11 @@ Exit screen with:
 Dependency: pyserial
 
 pip3 install pyserial
+
+### Bluetooth Audio
+
+Follow the connection instructions above, adding
+
+    connect <MAC_ADDRESS>
+
+prior to closing bluetoothctl.
