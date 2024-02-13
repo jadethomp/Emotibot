@@ -68,8 +68,41 @@ pip3 install pyserial
 
 ### Bluetooth Audio
 
-Follow the connection instructions above, adding
+Following this tutorial: <https://www.okdo.com/project/set-up-a-bluetooth-speaker-with-a-raspberry-pi/>
+
+Run:
+
+    systemctl --user start pulseaudio
+
+Then follow the connection instructions above, adding
 
     connect <MAC_ADDRESS>
 
 prior to closing bluetoothctl.
+
+Now, audio can be played with paplay \<filename\>, argument --volume=VOLUME (up to 65536)
+
+    paplay --volume=12000 Lhappy1.wav
+
+Program using python and the pasimple library
+
+Volume for pulseaudio should be set using
+
+    amixer -D pulse sset Master 20%
+
+### BonBon Audio Setup Explicitly
+
+1) turn the speakers on, double click the bottom button to have them connect to each other
+2) bluetoothctl, connect to the bluetooth speaker with:
+    bluetoothctl
+    scan on
+    *wait a second till it finds the MAC address*
+    connect <mac-address: probably 50:91:99:EE:17:3F>
+    exit
+
+3) set aplay volume to 20% with:
+    amixer -D pulse sset Master 20%
+
+4) Bonbon is ready to go
+
+(to play individual files, use "paplay \<filename\>")
