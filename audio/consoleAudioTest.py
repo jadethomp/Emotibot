@@ -14,19 +14,19 @@ soundsPath = str(pathlib.Path(__file__).parent.resolve()) + "/sounds/"
 def play(emotion, direction):
     chosenSound = soundsPath
     if direction == "L":
-        if emotion == 0:
+        if emotion == "0":
             chosenSound += "Lanxious"
-        elif emotion == 1:
+        elif emotion == "1":
             chosenSound += "Lsad"
-        elif emotion == 2:
+        elif emotion == "2":
             chosenSound += "Lhappy"
 
     if direction == "R":
-        if emotion == 0:
+        if emotion == "0":
             chosenSound += "Ranxious"
-        elif emotion == 1:
+        elif emotion == "1":
             chosenSound += "Rsad"
-        elif emotion == 2:
+        elif emotion == "2":
             chosenSound += "Rhappy"
 
     chosenSound += str(randrange(3) + 1) + ".wav"
