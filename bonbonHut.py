@@ -12,33 +12,56 @@ import time
 
 # this package must be from pip package "pyserial"
 import serial
-bonbon1 = serial.Serial("/dev/rfcomm0")
-bonbon2 = serial.Serial("/dev/rfcomm1")
+bonbon1BT = serial.Serial("/dev/rfcomm0")
+bonbon2BT = serial.Serial("/dev/rfcomm1")
 
-present = False
+lastTransmit = time.time()
 
+userPresent = False
+
+# The signal pin of the ultrasonic sensor
+# Labeled as the Raspberry pi's numerical GPIO pin
 GPIO_SIG = 18
 
 # Checks if the ultrasonic sensor detects an obstacle within range "low" to "high"
 def checkRange(low, high):
-    global present
+    global userPresent
+    global lastTransmit
     print("SeeedStudio Grove Ultrasonic get data and print")
+
+    shouldSend = False
+    sendVal = b'h'
 
     # check distance
     distanceCM = measurementInCM()
 
     print("Distance : %.1f CM" % distanceCM)
 
-    if distanceCM > low and distanceCM < high and not present:
+    if distanceCM > low and distanceCM < high and not userPresent:
         print("Person within distance!")
-        bonbon1.write(b'h')
-        bonbon2.write(b'h')
-        present = True
-    elif distanceCM < low or distanceCM > high and present:
+        # bonbon1BT.write(b'h')
+        # bonbon2BT.write(b'h')
+        sendVal = b'h'
+        shouldSend = True
+        userPresent = True
+    elif distanceCM < low or distanceCM > high and userPresent:
         print("Person out of distance!")
-        bonbon1.write(b'n')
-        bonbon2.write(b'n')
-        present = False
+        # bonbon1BT.write(b'n')
+        # bonbon2BT.write(b'n')
+        sendVal = b'n'
+        shouldSend = True
+        userPresent = False
+
+    # Enforce an interval
+    now = time.time()
+    transmitInterval = now - lastTransmit
+    if transmitInterval > 3:
+        if shouldSend:
+            print("Transmitting")
+            bonbon1BT.write(sendVal)
+            bonbon2BT.write(sendVal)
+            shouldSend = False
+            lastTransmit = now
 
 def measurementInCM():
     # rpi board gpio or bcm gpio
@@ -86,6 +109,8 @@ def main():
 
 if __name__ == '__main__':
     try:
+        print("Begin Student Design Challenge Loop")
+        print("Press CTRL+C to stop")
         main()
     except KeyboardInterrupt:
         GPIO.cleanup()
