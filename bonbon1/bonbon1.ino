@@ -11,6 +11,7 @@
 #ifdef __AVR__
  #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
 #endif
+#include <Adafruit_BNO055.h>
 
 //#define USE_PIN // Uncomment this to use PIN during pairing. The pin is specified on the line below
 const char *pin = "1234"; // Change this to more secure PIN.
@@ -97,6 +98,9 @@ Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_RGBW + NEO_KHZ800);
 
 // brighten() and darken() functions adapted from https://forum.arduino.cc/t/adafruit-neopixel-code-for-simple-brightness-fade/418170/2 
 // 0 to 255
+
+// NOTE: drv.go() is called semi-randomly throughout some functions to keep the heartbeat in the running queue (the brighten/darken functions will steal too much time sometimes)
+
 void brighten() {
   uint16_t i, j;
 
@@ -160,6 +164,24 @@ void emoCheck(int input)
   FADE_DELAY = (current_emotion == 0) ? 1 : (current_emotion == 1) ? 7 : 5;
 }
 
+// dual core init
+TaskHandle_t Task1;
+
+// IMU -------
+double xPos = 0, yPos = 0, current_xpos = 0, current_ypos = 0, last_xpos = 0, last_ypos = 0;
+uint16_t BNO055_SAMPLERATE_DELAY_MS = 10; //how often to read data from the board
+uint16_t PRINT_DELAY_MS = 500; // how often to print the data
+uint16_t printCount = 0; //counter to avoid printing every 10MS sample
+
+double ACCEL_VEL_TRANSITION =  (double)(BNO055_SAMPLERATE_DELAY_MS) / 1000.0;
+double ACCEL_POS_TRANSITION = 0.5 * ACCEL_VEL_TRANSITION * ACCEL_VEL_TRANSITION;
+double DEG_2_RAD = 0.01745329251; //trig functions require radians, BNO055 outputs degrees
+
+double MAX_DIFF = 50.0;
+int imu_checks = 0, stillness = 0;
+
+Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28);
+
 void setup() {
   Serial.begin(115200);
   SerialBT.begin(device_name); //Bluetooth device name
@@ -169,6 +191,8 @@ void setup() {
     SerialBT.setPin(pin);
     Serial.println("Using PIN");
   #endif
+
+  delay(100);
 
   #ifdef USE_DRV
     if (! drv.begin()) {
@@ -188,6 +212,88 @@ void setup() {
     strip.show();
     strip.setBrightness(255);
   #endif
+
+  if(!bno.begin()){
+    Serial.println("No IMU detected");
+    while(1);
+  }
+  Serial.println("IMU began!");
+
+  // dual core setup
+  // code is pinned to core 1 by default, so core 0 is the additional one here
+  // (dual core info here: https://randomnerdtutorials.com/esp32-dual-core-arduino-ide/)
+  xTaskCreatePinnedToCore(bluetooth_handler, "bluetooth", 10000, NULL, 1, &Task1, 0);
+}
+
+void bluetooth_handler(void * pvParameters){
+  Serial.print("Bluetooth handler running on core ");
+  Serial.println(xPortGetCoreID());
+
+  // recreate a void loop() for core 0
+  for(;;){
+    //Check if arduino is trying to send code to pi
+    if (Serial.available()) {
+      SerialBT.write(Serial.read());
+    }
+    if (SerialBT.available()) {
+      emoCheck(SerialBT.read());
+    }
+    delay(20);
+
+    // IMU signal processing
+    unsigned long start_time = micros();
+    sensors_event_t orientation_data, linear_accel_data;
+    bno.getEvent(&orientation_data, Adafruit_BNO055::VECTOR_EULER);
+    // bno.getEvent(&linear_accel_data, Adafruit_BNO055::VECTOR_LINEARACCEL);
+
+    // velocity of sensor in the direction it's facing
+    // speed = ACCEL_VEL_TRANSITION * linear_accel_data.acceleration.x / cos(DEG_2_RAD * orientation_data.orientation.x);
+
+    // xPos = xPos + ACCEL_POS_TRANSITION * linear_accel_data.acceleration.x;
+    // yPos = yPos + ACCEL_POS_TRANSITION * linear_accel_data.acceleration.y;
+
+    if (printCount * BNO055_SAMPLERATE_DELAY_MS >= PRINT_DELAY_MS) {
+      current_xpos = orientation_data.orientation.x;
+      current_ypos = orientation_data.orientation.y;
+
+      // Serial.println("Checking...");
+      // Serial.print(last_xpos);
+      // Serial.print(" - ");
+      // Serial.println(current_xpos);
+      // Serial.print(last_ypos);
+      // Serial.print(" - ");
+      // Serial.println(current_ypos);
+      
+      if((abs(last_xpos - current_xpos) > MAX_DIFF || abs(last_ypos - current_ypos) > MAX_DIFF) && imu_checks > 5){ // arbitrary value so first few are ignored
+        // set emo to presence
+        emoCheck('h');
+        stillness = 0;
+      }
+      else if(abs(last_xpos - current_xpos) < 1.0 && abs(last_ypos - current_ypos) < 1.0){
+        stillness++;
+      }
+
+      if(stillness > 5){ // again, arbitrary value
+        emoCheck('n');
+        stillness = 0;
+      }
+      // if IMU crash thingy happens
+      if(current_xpos == 0.0 || current_ypos == 0.0){
+        Serial.println("resetting IMU");
+        bno.begin(); // maybe this resets who knows
+        imu_checks = 0;
+
+      }
+
+      imu_checks++;
+      printCount = 0;
+      last_xpos = current_xpos;
+      last_ypos = current_ypos;
+    }
+    else {
+      printCount = printCount + 1;
+    }
+  }
 }
 
 void loop() {
@@ -208,12 +314,5 @@ void loop() {
     darken();
   #endif
 
-  //Check if arduino is trying to send code to pi
-  if (Serial.available()) {
-    SerialBT.write(Serial.read());
-  }
-  if (SerialBT.available()) {
-    emoCheck(SerialBT.read());
-  }
-  delay(20);
+  // BT serial moved to core 1
 }
