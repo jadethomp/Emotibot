@@ -147,12 +147,14 @@ void emoCheck(int input)
   if(input == 'h')
   {
     Serial.println("Bonbon is really scared of people ...");
+    SerialBT.write('h');
     current_emotion = 0;
   }
   //When no one is present
   else if(input == 'n')
   {
     Serial.println("Bonbon is happy they're alone!!");
+    SerialBT.write('n');
     current_emotion = 2;
   }
   else

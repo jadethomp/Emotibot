@@ -150,11 +150,13 @@ void emoCheck(int input)
   if(input == 'h')
   {
     Serial.println("Bonbon is happy you're here!!");
+    SerialBT.write('h');
     current_emotion = 2;
   }
   else if(input == 'n')
   {
     Serial.println("Bonbon is sad you left :(");
+    SerialBT.write('n');
     current_emotion = 1;
   }
   else
