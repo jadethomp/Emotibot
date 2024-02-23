@@ -310,5 +310,5 @@ void loop() {
     darken();
   #endif
 
-  // BT serial moved to core 1
+  // BT serial moved to core 0
 }
