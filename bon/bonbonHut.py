@@ -34,7 +34,8 @@ bonbon2State = False
 
 # The signal pin of the ultrasonic sensor
 # Labeled as the Raspberry pi's numerical GPIO pin
-GPIO_SIG = 18
+GPIO_TRIG = 2
+GPIO_ECHO = 3
 
 def checkState(which):
     global bonbon1State
@@ -126,23 +127,24 @@ def measurementInCM():
     GPIO.setmode(GPIO.BCM)
 
     # setup the GPIO_SIG as output
-    GPIO.setup(GPIO_SIG, GPIO.OUT)
+    GPIO.setup(GPIO_TRIG, GPIO.OUT)
+    GPIO.setup(GPIO_ECHO, GPIO.IN)
 
-    GPIO.output(GPIO_SIG, GPIO.LOW)
-    time.sleep(0.2)
-    GPIO.output(GPIO_SIG, GPIO.HIGH)
-    time.sleep(0.5)
-    GPIO.output(GPIO_SIG, GPIO.LOW)
-    start = time.time()
+    GPIO.output(GPIO_TRIG, False)
 
-    # setup GPIO_SIG as input
-    GPIO.setup(GPIO_SIG, GPIO.IN)
+    # waiting for sensor to settle
+    time.sleep(2)
+
+    # pulse to trigger the module, to start the ranging program
+    GPIO.output(GPIO_TRIG, True)
+    time.sleep(0.0001)
+    GPIO.output(GPIO_TRIG, False)
 
     # get duration from Ultrasonic SIG pin
-    while GPIO.input(GPIO_SIG) == 0:
+    while GPIO.input(GPIO_ECHO) == 0:
         start = time.time()
 
-    while GPIO.input(GPIO_SIG) == 1:
+    while GPIO.input(GPIO_ECHO) == 1:
         stop = time.time()
 
     return calcDistance(start, stop)
