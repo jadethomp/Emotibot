@@ -86,7 +86,7 @@ def playSound(which):
 def checkRange(low, high):
     global local_userPresent
     global lastTransmit
-    print("SeeedStudio Grove Ultrasonic get data and print")
+    print("BonBon Detecting Distance")
 
     shouldSend = False
     sendVal = b'h'
