@@ -60,6 +60,7 @@ def playSound(which):
     global bonbon2State
     global nextSound1
     global nextSound2
+    print("Playing Sound on bonbon", which)
     if(which == 1):
         if(time.time() >= nextSound1):
             if(bonbon1State == True):
@@ -169,6 +170,7 @@ def main():
     nextSound1 = time.time() + random.randrange(7, 21)
     nextSound2 = time.time() + random.randrange(7, 21)
     while True:
+        time.sleep(0.5)
         checkRange(0, 100)
         checkState(1)
         checkState(2)
