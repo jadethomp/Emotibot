@@ -123,18 +123,6 @@ def checkRange(low, high):
             lastTransmit = now
 
 def measurementInCM():
-    # rpi board gpio or bcm gpio
-    GPIO.setmode(GPIO.BCM)
-
-    # setup the GPIO_SIG as output
-    GPIO.setup(GPIO_TRIG, GPIO.OUT)
-    GPIO.setup(GPIO_ECHO, GPIO.IN)
-
-    GPIO.output(GPIO_TRIG, False)
-
-    # waiting for sensor to settle
-    time.sleep(2)
-
     # pulse to trigger the module, to start the ranging program
     GPIO.output(GPIO_TRIG, True)
     time.sleep(0.0001)
@@ -166,6 +154,18 @@ def calcDistance(start, stop):
 def main():
     global nextSound1
     global nextSound2
+    # rpi board gpio or bcm gpio
+    GPIO.setmode(GPIO.BCM)
+
+    # setup the GPIO_SIG as output
+    GPIO.setup(GPIO_TRIG, GPIO.OUT)
+    GPIO.setup(GPIO_ECHO, GPIO.IN)
+
+    GPIO.output(GPIO_TRIG, False)
+
+    # waiting for sensor to settle
+    time.sleep(2)
+
     nextSound1 = time.time() + random.randrange(7, 21)
     nextSound2 = time.time() + random.randrange(7, 21)
     while True:
