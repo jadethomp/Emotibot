@@ -144,20 +144,24 @@ void darken() {
   }
 }
 
+unsigned long lastEmoChange = millis();
+
 void emoCheck(int input)
 {
   //When person is present
-  if(input == 'h')
+  if(input == 'h' && millis() - lastEmoChange > 2000)
   {
     Serial.println("Bonbon is happy you're here!!");
-    SerialBT.write('h');
+    SerialBT.write(byte('h'));
     current_emotion = 2;
+    lastEmoChange = millis();
   }
-  else if(input == 'n')
+  else if(input == 'n' && millis() - lastEmoChange > 2000)
   {
     Serial.println("Bonbon is sad you left :(");
-    SerialBT.write('n');
+    SerialBT.write(byte('n'));
     current_emotion = 1;
+    lastEmoChange = millis();
   }
   else
   {
