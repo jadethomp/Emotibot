@@ -45,15 +45,20 @@ def checkState(which):
             newvalue = bonbon1BT.read(1)
             if(newvalue == 'h'):
                 bonbon1State = True
+                print("BonBon1 says here")
             elif(newvalue == 'n'):
                 bonbon1State = False
+                print("BonBon1 says not here")
+            print(newvalue)
     elif(which == 2):
         if(bonbon2BT.in_waiting > 0):
             newvalue = bonbon2BT.read(1)
             if(newvalue == 'h'):
                 bonbon2State = True
+                print("BonBon2 says here")
             elif(newvalue == 'n'):
                 bonbon2State = False
+                print("BonBon2 says not here")
 
 def playSound(which):
     global bonbon1State
@@ -88,7 +93,7 @@ def playSound(which):
 def checkRange(low, high):
     global local_userPresent
     global lastTransmit
-    print("BonBon Detecting Distance")
+    # print("BonBon Detecting Distance")
 
     shouldSend = False
     sendVal = b'h'
@@ -96,7 +101,7 @@ def checkRange(low, high):
     # check distance
     distanceCM = measurementInCM()
 
-    print("Distance : %.1f CM" % distanceCM)
+    # print("Distance : %.1f CM" % distanceCM)
 
     if distanceCM > low and distanceCM < high and not local_userPresent:
         print("Person within distance!")
