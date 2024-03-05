@@ -20,9 +20,9 @@ Old Crontab:
 
 New Crontab:
 
-    Blank :p
+    @reboot bash /home/pi/bin/sudoBTinit.sh >/home/pi/logs/sudoBTinit.log 2>&1
 
-This is going to be moved into the pi user's crontab, to see if the bluetooth script acts less weird with paplay.
+The speaker init is going to be moved into the pi user's crontab, to see if the bluetooth script acts less weird with paplay.
 
 ## pi Crontab
 
@@ -36,5 +36,5 @@ Old Crontab:
 
 The new crontab is going to be
 
-    @reboot bash /home/pi/bin/userBTinit.sh >/home/pi/logs/cronlogBT
-    @reboot sleep 20 && cd /home/pi/bon/ && python3 bonbonHut.py >/home/pi/logs/picronlog
+    @reboot bash /home/pi/bin/userBTinit.sh >/home/pi/logs/userBTinit.log
+    @reboot sleep 20 && cd /home/pi/bon/ && python3 bonbonHut.py >/home/pi/logs/bonbonHut.log
