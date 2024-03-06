@@ -1,6 +1,7 @@
-# Author: Kyler Smith for the Student Design Challenge
-# The main execution script for bonbon control, using the Grove Ultrasonic Ranger (which uses the same pin for trigger and receive)
-# The sensor's sig pin is connected to the raspberry pi on gpio pin GPIO_SIG (defaults to 6)
+#!/usr/bin/python3.9
+
+# Authors: Kyler Smith for the Student Design Challenge
+# The main execution script for bonbon control, using an adaption of the Grove Ultrasonic Ranger
 
 # Printing to the console could be removed but is left as a debug / control PC heartbeat signal
 
@@ -34,8 +35,8 @@ bonbon2State = False
 
 # The signal pin of the ultrasonic sensor
 # Labeled as the Raspberry pi's numerical GPIO pin
-GPIO_TRIG = 2
-GPIO_ECHO = 3
+GPIO_TRIG = 27
+GPIO_ECHO = 17
 
 def checkState(which):
     global bonbon1State
