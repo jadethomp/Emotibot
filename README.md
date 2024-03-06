@@ -1,16 +1,33 @@
 # bonbon
 
-Codebase for a smart tool used for multimodal affect communication. HRI 2024 Student Design Challenge: "How Does it Feel?: A Tool for Multi-Sensory Affect Communication"
+Codebase for a smart tool used for multimodal affect communication. HRI 2024 Student Design Challenge: "Emotibot: A Tool for Multi-Sensory Affect Communication"
+
+This README is a work in progress!
+
+## Setup
+
+Install dependencies:
+
+? sudo apt-get install libsdl-ttf2.0-0
+? sudo apt-get install libsdl2-mixer-2.0-0
+sudo apt install python3-pip
+pip install pyserial
+(there may be more...brute force)
+
+Configure crontab by running the command `crontab -e`. Add the following lines to your user's crontab:
+
+`@reboot sleep 20 && /home/pi/bin/userBTinit.sh > /home/pi/logs/userBTinit.log
+
+@reboot sleep 30 && /home/pi/driver.sh > /home/pi/logs/driverOutput.log && echo "done" > /home/pi/logs/done.log`
 
 ## Running the code
 
-Load SerialEmotionTest and SerialEmotionTestBonBon2 onto 2 different ESP32's. Connect a raspberry pi to both of them and run the appropriate python script.
+Load bonbon1.ino onto one ESP32, and bonbon2.ino onto another ESP32. 
 
-Run 1bon.py if there is only 1 bonbon. This bonbon should be connected via a serial port on /dev/rfcomm0.
+Load the bon directory, bin directory, and driver.sh file into /home/pi/ on a Raspberry Pi (we used Raspberry Pi OS (Legacy, 32-bit) Lite - Debian Bullseye).
 
-Run 2bon.py if there are 2 bonbons. One bonbon should be connected on serial port /dev/rfcomm0, and another on /dev/rfcomm1. See "bluetooth/bluetoothDoc.md" for more information.
+NOTE: The sudoBTinit.sh and userBTinit.sh scripts must be configured with the MAC addresses of your specific ESP's and speaker unit.
 
-## Dependencies
+Reboot your Raspberry Pi. Ensure that the two speakers are on and connected to each other, and that the two ESPs are on and running normally.
 
-sudo apt-get install libsdl-ttf2.0-0
-sudo apt-get install libsdl2-mixer-2.0-0
+If configured correctly, crontab should initialize all Bluetooth connections and begin the main loop.
