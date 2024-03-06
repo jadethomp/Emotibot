@@ -43,20 +43,20 @@ def checkState(which):
     if(which == 1):
         if(bonbon1BT.in_waiting > 0):
             newvalue = bonbon1BT.read(1)
-            if(newvalue == 'h'):
+            if(newvalue == b'h'):
                 bonbon1State = True
                 print("BonBon1 says here")
-            elif(newvalue == 'n'):
+            elif(newvalue == b'n'):
                 bonbon1State = False
                 print("BonBon1 says not here")
             print(newvalue)
     elif(which == 2):
         if(bonbon2BT.in_waiting > 0):
             newvalue = bonbon2BT.read(1)
-            if(newvalue == 'h'):
+            if(newvalue == b'h'):
                 bonbon2State = True
                 print("BonBon2 says here")
-            elif(newvalue == 'n'):
+            elif(newvalue == b'n'):
                 bonbon2State = False
                 print("BonBon2 says not here")
 
