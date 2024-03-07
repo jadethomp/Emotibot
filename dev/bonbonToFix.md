@@ -56,3 +56,8 @@ connect 50:91:99:EE:17:3F
       - This outputs to /home/pi/logs/userBTinit.log
     - sleep 30, then run script that sets up pulse audio/environment and runs python script (driver.sh)
       - This outputs to driverOutput.log
+
+## March 7 Updates (Jade)
+
+- Autostart bug fixed by configuring pi to automatically log in on boot! (solution found at https://forums.raspberrypi.com/viewtopic.php?t=346924)
+- Deduced that switching between SD cards requires a "bluetoothctl -- remove" and then re-pairing/trusting/connecting to the speaker unit for the audio to work again (speaker gets confused somehow)
