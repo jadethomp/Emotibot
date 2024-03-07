@@ -61,3 +61,6 @@ connect 50:91:99:EE:17:3F
 
 - Autostart bug fixed by configuring pi to automatically log in on boot! (solution found at https://forums.raspberrypi.com/viewtopic.php?t=346924)
 - Deduced that switching between SD cards requires a "bluetoothctl -- remove" and then re-pairing/trusting/connecting to the speaker unit for the audio to work again (speaker gets confused somehow)
+
+- Debugged an error with the main python executable, solved by running dos2unix on bonbonHut.py (there was a weird EOL char)
+- I had the TRIG and ECHO pins swapped in bonbonHut.py also oops
