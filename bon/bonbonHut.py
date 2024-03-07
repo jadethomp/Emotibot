@@ -76,18 +76,20 @@ def playSound(which):
                 # play random sad
                 play_wav(soundsPath + str(sadSounds[random.randrange(0, 2)]))
             # reset next sound
-            nextSound1 = time.time() + random.randrange(7, 21)
+            nextSound1 = time.time() + random.randrange(6, 12)
     elif(which == 2):
         if(time.time() >= nextSound2):
             print("Playing Sound on bonbon2")
             if(bonbon2State == True):
                 # play random anxious
                 play_wav(soundsPath + str(anxiousSounds[random.randrange(0, 2)]))
+                # reset next sound
+                nextSound2 = time.time() + random.randrange(3, 5)
             elif(bonbon2State == False):
                 # play random happy
                 play_wav(soundsPath + str(happySounds[random.randrange(3, 5)]))
-            # reset next sound
-            nextSound2 = time.time() + random.randrange(7, 21)
+                # reset next sound
+                nextSound2 = time.time() + random.randrange(6, 12)
 
 
 # Checks if the ultrasonic sensor detects an obstacle within range "low" to "high"
