@@ -37,8 +37,8 @@ bonbon2State = False
 
 # The signal pin of the ultrasonic sensor
 # Labeled as the Raspberry pi's numerical GPIO pin
-GPIO_TRIG = 27
-GPIO_ECHO = 17
+GPIO_TRIG = 17
+GPIO_ECHO = 27
 
 def checkState(which):
     global bonbon1State
