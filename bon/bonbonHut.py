@@ -40,6 +40,8 @@ bonbon2State = False
 GPIO_TRIG = 17
 GPIO_ECHO = 27
 
+random.seed(time.time())
+
 def checkState(which):
     global bonbon1State
     global bonbon2State
